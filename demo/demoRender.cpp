@@ -1,6 +1,5 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
 #include <iostream>
 
 // Function declarations
@@ -24,22 +23,20 @@ constexpr unsigned int SCR_HEIGHT = 600;
 
 const char* vertexShaderSource = "#version 330 core\n"
 "layout (location = 0) in vec3 aPos;\n"
+"layout (location = 1) in vec3 aColor;\n"
+"out vec3 vertexColor;\n"
 "void main()\n"
 "{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+"   gl_Position = vec4(aPos, 1.0);\n"
+"   vertexColor = aColor;\n"
 "}\0";
+
 const char* fragmentShaderSource = "#version 330 core\n"
 "out vec4 FragColor;\n"
+"in vec3 vertexColor;\n"
 "void main()\n"
 "{\n"
-"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-"}\n\0";
-
-const char* fragmentShaderSourceVariant = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"void main()\n"
-"{\n"
-"   FragColor = vec4(0.0f, 0.5f, 0.3f, 1.0f);\n"
+"   FragColor = vec4(vertexColor,1.0f);\n"
 "}\n\0";
 
 int main()
@@ -50,38 +47,28 @@ int main()
 	if (!createWindow(window)) return -1;
 	if (!initGlad()) return -1;
 
-    
-
-    unsigned int vertexShader, fragmentShader, fragmentShaderVariant;
+    unsigned int vertexShader, fragmentShader;
 
     create_shader(vertexShader, GL_VERTEX_SHADER, vertexShaderSource);
     create_shader(fragmentShader, GL_FRAGMENT_SHADER, fragmentShaderSource);
-    create_shader(fragmentShaderVariant, GL_FRAGMENT_SHADER, fragmentShaderSourceVariant);
+    //create_shader(fragmentShaderVariant, GL_FRAGMENT_SHADER, fragmentShaderSourceVariant);
 
 
-	unsigned int shaderProgram, shaderProgramVariant;
+	unsigned int shaderProgram;
     const unsigned int shadersGroup[] = { vertexShader, fragmentShader };
-    const unsigned int shadersGroupVariant [] = {vertexShader, fragmentShaderVariant};
+    //const unsigned int shadersGroupVariant [] = {vertexShader, fragmentShaderVariant};
 
     create_shader_program(shaderProgram, shadersGroup);
-	create_shader_program(shaderProgramVariant, shadersGroupVariant);
+	//create_shader_program(shaderProgramVariant, shadersGroupVariant);
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
-	glDeleteShader(fragmentShaderVariant);
 
-    float vertices_t1[] = {
-        // first triangle
-        -0.9f, -0.5f, 0.0f,
-        -0.0f, -0.5f, 0.0f,
-        -0.45f, 0.5f, 0.0f,
-    };
-
-    float vertices_t2[]
-    {
-        0.0f, -0.5f, 0.0f,
-    	0.9f, -0.5f, 0.0f,
-    	0.45f, 0.5f, 0.0f
+    float vertices[] = {
+        // positions         // colors
+         0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
+        -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
+         0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
     };
 
     //unsigned int indices[] = {  // note that we start from 0!
@@ -89,14 +76,11 @@ int main()
     //    1, 2, 3    // second triangle
     //};
 
-    size_t verticesSize_t1 = std::size(vertices_t1) * sizeof(float);
-    size_t verticesSize_t2 = std::size(vertices_t2) * sizeof(float);
-	//size_t indicesSize = std::size(indices) * sizeof(unsigned int);
+    size_t verticesSize = std::size(vertices) * sizeof(float);
 
-    unsigned int vbo_t1, vao_t1, vbo_t2, vao_t2;
+    unsigned int vbo_t1, vao_t1;
 
-    create_mesh(vbo_t1, vao_t1, vertices_t1, verticesSize_t1, GL_STATIC_DRAW);
-    create_mesh(vbo_t2, vao_t2, vertices_t2, verticesSize_t2,GL_STATIC_DRAW);
+    create_mesh(vbo_t1, vao_t1, vertices, verticesSize, GL_STATIC_DRAW);
 
     // uncomment this call to draw in wireframe polygons.
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -106,18 +90,14 @@ int main()
     {
         // input
         processInput(window);
-
         // render
         glClearColor(0.2f, 0.3f, 0.5f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+
         glUseProgram(shaderProgram);
         glBindVertexArray(vao_t1);
         glDrawArrays(GL_TRIANGLES, 0,3);
-
-        glUseProgram(shaderProgramVariant);
-		glBindVertexArray(vao_t2);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
         //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -127,11 +107,8 @@ int main()
     // optional: de-allocate all resources once they've outlived their purpose:
     // ------------------------------------------------------------------------
     glDeleteVertexArrays(1, &vao_t1);
-	glDeleteBuffers(1, &vao_t2);
     glDeleteBuffers(1, &vbo_t1);
-	glDeleteBuffers(1, &vbo_t2);
     glDeleteProgram(shaderProgram);
-	//glDeleteProgram(shaderProgramVariant);
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
     glfwTerminate();
@@ -240,8 +217,10 @@ void create_mesh(unsigned int& VBO, unsigned int& VAO, unsigned int& EBO, const 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesSize, indices, usage);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -261,8 +240,10 @@ void create_mesh(unsigned int& VBO, unsigned int& VAO, const float vertices[], c
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, verticesSize, vertices, usage);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
     glBindBuffer(GL_ARRAY_BUFFER, 0);
