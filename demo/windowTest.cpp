@@ -1,6 +1,7 @@
 
-#include "window.h"
 #include <GLFW/glfw3.h>
+#include "WindowsWindow.h"
+#include "OpenglContext.h"
 
 constexpr int HEIGHT = 600;
 constexpr int WIDTH = 800;
@@ -9,11 +10,11 @@ const char* TITLE = "Window Test";
 int main()
 {
 
-	auto* window = Platform::Window::Create(WIDTH,HEIGHT,TITLE);
+	const auto* window = new Platform::WindowsWindow(WIDTH, HEIGHT, TITLE);
+	Platform::OpenglContext::InitContext(window);
 
-	GLFWwindow* nativeHandle = static_cast<GLFWwindow*>(window->GetNativeHandle());
 
-	while (!glfwWindowShouldClose(nativeHandle))
+	while (!glfwWindowShouldClose(window->GetNativeHandle()))
 	{
 		window->OnUpdate();
 	}
