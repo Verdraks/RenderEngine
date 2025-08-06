@@ -1,12 +1,15 @@
 #pragma once
-#include "WindowsWindow.h"
+#include "GLFW/glfw3.h"
 
 namespace Platform
 {
 	class OpenglContext
 	{
 		public:
-			static void InitContext(const WindowsWindow* windowsWindow);
-			static void UpdateContext(GLFWwindow* window, int width, int height);
+			OpenglContext(GLFWwindow* windowHandle);
+			void Init() const;
+			void SwapBuffer() const;
+		private:
+			GLFWwindow* m_windowHandle = nullptr;
 	};
 }

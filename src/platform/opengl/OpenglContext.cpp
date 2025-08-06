@@ -1,16 +1,20 @@
 #include "glad/glad.h"
-#include "GLFW/glfw3.h"
-
 #include "OpenglContext.h"
-#include "WindowsWindow.h"
 
-void Platform::OpenglContext::InitContext(const WindowsWindow* windowsWindow)
+Platform::OpenglContext::OpenglContext(GLFWwindow* windowHandle) : m_windowHandle(windowHandle)
 {
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) return;
-	glfwSetFramebufferSizeCallback(windowsWindow->GetNativeHandle(),UpdateContext);
+	this->Init();
 }
 
-void Platform::OpenglContext::UpdateContext(GLFWwindow* window, int width, int height)
+void Platform::OpenglContext::Init() const
 {
-	glViewport(0, 0, width, height);
+	glfwMakeContextCurrent(m_windowHandle);
+	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 }
+
+void Platform::OpenglContext::SwapBuffer() const
+{
+	glfwSwapBuffers(m_windowHandle);
+}
+
+

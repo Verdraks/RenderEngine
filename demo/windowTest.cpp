@@ -9,12 +9,9 @@ const char* TITLE = "Window Test";
 
 int main()
 {
-
 	const auto* window = new Platform::WindowsWindow(WIDTH, HEIGHT, TITLE);
-	Platform::OpenglContext::InitContext(window);
 
-
-	while (!glfwWindowShouldClose(window->GetNativeHandle()))
+	while (window->IsOpen())
 	{
 		window->OnUpdate();
 	}

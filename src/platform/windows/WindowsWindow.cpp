@@ -21,8 +21,7 @@ Platform::WindowsWindow::WindowsWindow(const int width, const int height, const 
 		glfwTerminate();
 		throw std::runtime_error("Failed to create GLFW window");
 	}
-
-	glfwMakeContextCurrent(this->m_windowHandle);
+	this->m_context = new OpenglContext(this->m_windowHandle);
 }
 
 Platform::WindowsWindow::~WindowsWindow()
@@ -38,7 +37,12 @@ Platform::WindowsWindow::~WindowsWindow()
 void Platform::WindowsWindow::OnUpdate() const
 {
 	glfwPollEvents();
-	glfwSwapBuffers(this->m_windowHandle);
+	this->m_context->SwapBuffer();
+}
+
+bool Platform::WindowsWindow::IsOpen() const
+{
+	return !glfwWindowShouldClose(this->m_windowHandle);
 }
 
 GLFWwindow* Platform::WindowsWindow::GetNativeHandle() const
