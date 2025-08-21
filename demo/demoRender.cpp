@@ -186,7 +186,8 @@ void create_shader_program(unsigned int& shaderProgram, const unsigned int shade
 {
 	shaderProgram = glCreateProgram();
 
-    size_t indexCount = sizeof(shaders) / sizeof(shaders[0]);
+    size_t indexCount = sizeof(shaders) / sizeof(unsigned int);
+
     for (size_t i = 0; i < indexCount; ++i) 
     {
         glAttachShader(shaderProgram, shaders[i]);

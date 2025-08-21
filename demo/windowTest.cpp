@@ -1,5 +1,3 @@
-
-#include <GLFW/glfw3.h>
 #include "WindowsWindow.h"
 #include "OpenglContext.h"
 
