@@ -7,9 +7,9 @@ namespace Platform
 	{
 		public:
 			OpenglContext(GLFWwindow* windowHandle);
-			void Init() const;
 			void SwapBuffer() const;
 		private:
+			static void UpdateContext(GLFWwindow* window, int width, int height);
 			GLFWwindow* m_windowHandle = nullptr;
 	};
 }

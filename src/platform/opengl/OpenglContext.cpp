@@ -3,13 +3,9 @@
 
 Platform::OpenglContext::OpenglContext(GLFWwindow* windowHandle) : m_windowHandle(windowHandle)
 {
-	this->Init();
-}
-
-void Platform::OpenglContext::Init() const
-{
 	glfwMakeContextCurrent(m_windowHandle);
 	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+	glfwSetFramebufferSizeCallback(m_windowHandle, UpdateContext);
 }
 
 void Platform::OpenglContext::SwapBuffer() const
@@ -18,3 +14,7 @@ void Platform::OpenglContext::SwapBuffer() const
 }
 
 
+void Platform::OpenglContext::UpdateContext(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+}

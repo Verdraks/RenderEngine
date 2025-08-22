@@ -10,26 +10,27 @@ Platform::WindowsWindow::WindowsWindow(const int width, const int height, const 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	this->m_windowHandle = glfwCreateWindow(width, height, title, nullptr, nullptr);
+	m_windowHandle = glfwCreateWindow(width, height, title, nullptr, nullptr);
 
 
-	this->m_width = width;
-	this->m_height = height;
+	m_width = width;
+	m_height = height;
 
-	if (!this->m_windowHandle)
+	if (!m_windowHandle)
 	{
 		glfwTerminate();
 		throw std::runtime_error("Failed to create GLFW window");
 	}
-	this->m_context = new OpenglContext(this->m_windowHandle);
+	m_context = new OpenglContext(m_windowHandle);
+
 }
 
 Platform::WindowsWindow::~WindowsWindow()
 {
-	if (this->m_windowHandle != nullptr)
+	if (m_windowHandle != nullptr)
 	{
-		glfwDestroyWindow(this->m_windowHandle);
-		this->m_windowHandle = nullptr;
+		glfwDestroyWindow(m_windowHandle);
+		m_windowHandle = nullptr;
 	}
 	glfwTerminate();
 }
@@ -37,25 +38,10 @@ Platform::WindowsWindow::~WindowsWindow()
 void Platform::WindowsWindow::OnUpdate() const
 {
 	glfwPollEvents();
-	this->m_context->SwapBuffer();
+	m_context->SwapBuffer();
 }
 
 bool Platform::WindowsWindow::IsOpen() const
 {
 	return !glfwWindowShouldClose(this->m_windowHandle);
-}
-
-GLFWwindow* Platform::WindowsWindow::GetNativeHandle() const
-{
-	return this->m_windowHandle;
-}
-
-int Platform::WindowsWindow::GetWidth() const
-{
-	return this->m_width;
-}
-
-int Platform::WindowsWindow::GetHeight() const
-{
-	return this->m_height;
 }

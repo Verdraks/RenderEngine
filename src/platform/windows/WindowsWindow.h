@@ -13,10 +13,10 @@ namespace Platform
 			~WindowsWindow();
 			void OnUpdate() const;
 			bool IsOpen() const;
-			GLFWwindow* GetNativeHandle() const;
 
-			int GetWidth() const;
-			int GetHeight() const;
+			GLFWwindow* GetNativeHandle() const { return m_windowHandle; }
+			int GetWidth() const { return m_width; }
+			int GetHeight() const { return m_height; }
 
 		private:
 			GLFWwindow* m_windowHandle = nullptr;

@@ -1,5 +1,6 @@
 #include "Shader.h"
 #include "WindowsWindow.h"
+#include <array>
 
 constexpr int HEIGHT = 600;
 constexpr int WIDTH = 800;
@@ -46,6 +47,8 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glClearColor(0.2f, 0.3f, 0.5f, 1.0f);
+
+		//shader->SetVector("vertexOffset", { (float)sin(glfwGetTime()),0.0f, 0.0f });
 		shader->Use();
 
 

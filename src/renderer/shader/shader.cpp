@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <array>
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath)
 {
@@ -122,4 +123,16 @@ void Shader::SetFloat(const std::string& name, float value) const
 		return;
 	}
 	glUniform1f(location, value);
+}
+
+void Shader::SetVector(const std::string& name, const std::array<float, 3> & value) const
+{
+	int location = glGetUniformLocation(m_id, name.c_str());
+	if (location == -1)
+	{
+		std::cerr << "ERROR::SHADER::UNIFORM_NOT_FOUND: " << name << '\n';
+		return;
+	}
+
+	glUniform3fv(location, 1, value.data());
 }
