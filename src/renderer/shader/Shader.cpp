@@ -4,7 +4,7 @@
 #include <sstream>
 #include <array>
 
-Shader::Shader(const char* vertexPath, const char* fragmentPath)
+Shader::Shader(const char *vertexPath, const char *fragmentPath)
 {
 	std::ifstream vertexShaderFile;
 	std::ifstream fragmentShaderFile;
@@ -25,30 +25,28 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
 		fragmentFileContent = std::string((std::istreambuf_iterator<char>(fragmentShaderFile)), std::istreambuf_iterator<char>());
 		fragmentShaderFile.close();
 	}
-	catch (const std::exception& exeption)
+	catch (const std::exception &exception)
 	{
-		std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
+		std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ" << exception.what() << std::endl;
 	}
 
-	const char* vertexShaderCode = vertexFileContent.c_str();
-	const char* fragmentShaderCode = fragmentFileContent.c_str();
-
+	const char *vertexShaderCode = vertexFileContent.c_str();
+	const char *fragmentShaderCode = fragmentFileContent.c_str();
 
 	unsigned int vertexShader, fragmentShader;
 
 	CompileShader(vertexShader, vertexShaderCode, GL_VERTEX_SHADER);
 	CompileShader(fragmentShader, fragmentShaderCode, GL_FRAGMENT_SHADER);
 
-	std::vector<unsigned int> shaders = { vertexShader, fragmentShader };
+	std::vector<unsigned int> shaders = {vertexShader, fragmentShader};
 
 	CompileShaderProgram(shaders);
 
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
-
 }
 
-void Shader::CompileShaderProgram(const std::vector<unsigned int> & shaders)
+void Shader::CompileShaderProgram(const std::vector<unsigned int> &shaders)
 {
 	m_id = glCreateProgram();
 
@@ -66,11 +64,12 @@ void Shader::CompileShaderProgram(const std::vector<unsigned int> & shaders)
 	if (!success)
 	{
 		glGetProgramInfoLog(m_id, 512, nullptr, infoLog);
-		std::cerr << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << '\n';
+		std::cerr << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n"
+				  << infoLog << '\n';
 	}
 }
 
-void Shader::CompileShader(unsigned int & shader, const char* shaderCode, GLuint shaderType)
+void Shader::CompileShader(unsigned int &shader, const char *shaderCode, GLuint shaderType)
 {
 	shader = glCreateShader(shaderType);
 	glShaderSource(shader, 1, &shaderCode, nullptr);
@@ -82,17 +81,17 @@ void Shader::CompileShader(unsigned int & shader, const char* shaderCode, GLuint
 	if (!success)
 	{
 		glGetShaderInfoLog(shader, 512, nullptr, infoLog);
-		std::cerr << "ERROR::SHADER::COMPILATION_FAILED\n" << infoLog << '\n';
+		std::cerr << "ERROR::SHADER::COMPILATION_FAILED\n"
+				  << infoLog << '\n';
 	}
 }
-
 
 void Shader::Use() const
 {
 	glUseProgram(m_id);
 }
 
-void Shader::SetBool(const std::string& name, bool value) const
+void Shader::SetBool(const std::string &name, bool value) const
 {
 	int location = glGetUniformLocation(m_id, name.c_str());
 	if (location == -1)
@@ -103,7 +102,7 @@ void Shader::SetBool(const std::string& name, bool value) const
 	glUniform1i(location, static_cast<int>(value));
 }
 
-void Shader::SetInt(const std::string& name, int value) const
+void Shader::SetInt(const std::string &name, int value) const
 {
 	int location = glGetUniformLocation(m_id, name.c_str());
 	if (location == -1)
@@ -114,7 +113,7 @@ void Shader::SetInt(const std::string& name, int value) const
 	glUniform1i(location, value);
 }
 
-void Shader::SetFloat(const std::string& name, float value) const
+void Shader::SetFloat(const std::string &name, float value) const
 {
 	int location = glGetUniformLocation(m_id, name.c_str());
 	if (location == -1)
@@ -125,7 +124,7 @@ void Shader::SetFloat(const std::string& name, float value) const
 	glUniform1f(location, value);
 }
 
-void Shader::SetVector(const std::string& name, const std::array<float, 3> & value) const
+void Shader::SetVector(const std::string &name, const std::array<float, 3> &value) const
 {
 	int location = glGetUniformLocation(m_id, name.c_str());
 	if (location == -1)

@@ -1,7 +1,7 @@
-#include "WindowsWindow.h"
+#include "Window.h"
 #include <stdexcept>
 
-Platform::WindowsWindow::WindowsWindow(const int width, const int height, const char* title)
+Platform::Window::Window(const int width, const int height, const char *title)
 {
 	if (!glfwInit())
 	{
@@ -9,9 +9,9 @@ Platform::WindowsWindow::WindowsWindow(const int width, const int height, const 
 	}
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	// TODO_OM: Separte target profile link to renderer and platform.
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	m_windowHandle = glfwCreateWindow(width, height, title, nullptr, nullptr);
-
 
 	m_width = width;
 	m_height = height;
@@ -21,11 +21,11 @@ Platform::WindowsWindow::WindowsWindow(const int width, const int height, const 
 		glfwTerminate();
 		throw std::runtime_error("Failed to create GLFW window");
 	}
+	// TODO_OM: Separte context creation to renderer and platform.
 	m_context = new OpenglContext(m_windowHandle);
-
 }
 
-Platform::WindowsWindow::~WindowsWindow()
+Platform::Window::~Window()
 {
 	if (m_windowHandle != nullptr)
 	{
@@ -35,13 +35,26 @@ Platform::WindowsWindow::~WindowsWindow()
 	glfwTerminate();
 }
 
-void Platform::WindowsWindow::OnUpdate() const
+void Platform::Window::OnPreUpdate() const
 {
-	glfwPollEvents();
-	m_context->SwapBuffer();
+	ProcessInputs();
 }
 
-bool Platform::WindowsWindow::IsOpen() const
+void Platform::Window::OnUpdate() const
+{
+	m_context->SwapBuffer();
+	glfwPollEvents();
+}
+
+void Platform::Window::ProcessInputs() const
+{
+	if (glfwGetKey(m_windowHandle, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{
+		glfwSetWindowShouldClose(m_windowHandle, true);
+	}
+}
+
+bool Platform::Window::IsOpen() const
 {
 	return !glfwWindowShouldClose(this->m_windowHandle);
 }

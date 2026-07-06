@@ -3,78 +3,77 @@
 #include <iostream>
 
 // Function declarations
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow* window);
+void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+void processInput(GLFWwindow *window);
 
 void initGlfw();
 bool initGlad();
-bool createWindow(GLFWwindow*& window);
+bool createWindow(GLFWwindow *&window);
 
-
-void create_shader(unsigned int& shader, GLuint type, const char* source);
-void create_shader_program(unsigned int& shaderProgram, const unsigned int shaders[]);
-void create_mesh(unsigned int& VBO, unsigned int& VAO, unsigned int& EBO, const float vertices[], const size_t verticesSize, const unsigned int indices[], const size_t indicesSize, GLuint usage);
-void create_mesh(unsigned int& VBO, unsigned int& VAO, const float vertices[], const size_t verticesSize, GLuint usage);
-
+void create_shader(unsigned int &shader, GLuint type, const char *source);
+void create_shader_program(unsigned int &shaderProgram, const unsigned int shaders[]);
+void create_mesh(unsigned int &VBO, unsigned int &VAO, unsigned int &EBO, const float vertices[], const size_t verticesSize, const unsigned int indices[], const size_t indicesSize, GLuint usage);
+void create_mesh(unsigned int &VBO, unsigned int &VAO, const float vertices[], const size_t verticesSize, GLuint usage);
 
 // Settings
 constexpr unsigned int SCR_WIDTH = 800;
 constexpr unsigned int SCR_HEIGHT = 600;
 
-const char* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"layout (location = 1) in vec3 aColor;\n"
-"out vec3 vertexColor;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos, 1.0);\n"
-"   vertexColor = aColor;\n"
-"}\0";
+const char *vertexShaderSource = "#version 330 core\n"
+                                 "layout (location = 0) in vec3 aPos;\n"
+                                 "layout (location = 1) in vec3 aColor;\n"
+                                 "out vec3 vertexColor;\n"
+                                 "void main()\n"
+                                 "{\n"
+                                 "   gl_Position = vec4(aPos, 1.0);\n"
+                                 "   vertexColor = aColor;\n"
+                                 "}\0";
 
-const char* fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"in vec3 vertexColor;\n"
-"void main()\n"
-"{\n"
-"   FragColor = vec4(vertexColor,1.0f);\n"
-"}\n\0";
+const char *fragmentShaderSource = "#version 330 core\n"
+                                   "out vec4 FragColor;\n"
+                                   "in vec3 vertexColor;\n"
+                                   "void main()\n"
+                                   "{\n"
+                                   "   FragColor = vec4(vertexColor,1.0f);\n"
+                                   "}\n\0";
 
 int main()
 {
 
     initGlfw();
-    GLFWwindow* window = nullptr;
-	if (!createWindow(window)) return -1;
-	if (!initGlad()) return -1;
+    GLFWwindow *window = nullptr;
+    if (!createWindow(window))
+        return -1;
+    if (!initGlad())
+        return -1;
 
     unsigned int vertexShader, fragmentShader;
 
     create_shader(vertexShader, GL_VERTEX_SHADER, vertexShaderSource);
     create_shader(fragmentShader, GL_FRAGMENT_SHADER, fragmentShaderSource);
-    //create_shader(fragmentShaderVariant, GL_FRAGMENT_SHADER, fragmentShaderSourceVariant);
+    // create_shader(fragmentShaderVariant, GL_FRAGMENT_SHADER, fragmentShaderSourceVariant);
 
-
-	unsigned int shaderProgram;
-    const unsigned int shadersGroup[] = { vertexShader, fragmentShader };
-    //const unsigned int shadersGroupVariant [] = {vertexShader, fragmentShaderVariant};
+    unsigned int shaderProgram;
+    const unsigned int shadersGroup[] = {vertexShader, fragmentShader};
+    // const unsigned int shadersGroupVariant [] = {vertexShader, fragmentShaderVariant};
 
     create_shader_program(shaderProgram, shadersGroup);
-	//create_shader_program(shaderProgramVariant, shadersGroupVariant);
+    // create_shader_program(shaderProgramVariant, shadersGroupVariant);
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
     float vertices[] = {
         // positions         // colors
-         0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
-        -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-         0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
+        0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // bottom right
+        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom left
+        0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f    // top
     };
 
-    //unsigned int indices[] = {  // note that we start from 0!
-    //    0, 1, 3,   // first triangle
-    //    1, 2, 3    // second triangle
-    //};
+    // unsigned int indices[] = {  // note that we start from 0!
+    //     0, 1, 3,   // first triangle
+    //     1, 2, 3    // second triangle
+    // };
 
     size_t verticesSize = std::size(vertices) * sizeof(float);
 
@@ -83,7 +82,7 @@ int main()
     create_mesh(vbo_t1, vao_t1, vertices, verticesSize, GL_STATIC_DRAW);
 
     // uncomment this call to draw in wireframe polygons.
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     // render loop
     while (!glfwWindowShouldClose(window))
@@ -94,11 +93,10 @@ int main()
         glClearColor(0.2f, 0.3f, 0.5f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-
         glUseProgram(shaderProgram);
         glBindVertexArray(vao_t1);
-        glDrawArrays(GL_TRIANGLES, 0,3);
-        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         glfwSwapBuffers(window);
@@ -115,7 +113,6 @@ int main()
     return 0;
 }
 
-
 void initGlfw()
 {
     glfwInit();
@@ -131,12 +128,12 @@ bool initGlad()
         std::cout << "Failed to initialize GLAD" << '\n';
         return false;
     }
-	return true;
+    return true;
 }
 
 // glfw window creation
 // --------------------
-bool createWindow(GLFWwindow*& window)
+bool createWindow(GLFWwindow *&window)
 {
     window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Render Engine", NULL, NULL);
     if (window == nullptr)
@@ -147,12 +144,12 @@ bool createWindow(GLFWwindow*& window)
     }
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	return true;
+    return true;
 }
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow* window)
+void processInput(GLFWwindow *window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
@@ -160,15 +157,16 @@ void processInput(GLFWwindow* window)
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
-    // make sure the viewport matches the new window dimensions; note that width and 
+    // make sure the viewport matches the new window dimensions; note that width and
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
 }
 
-void create_shader(unsigned int& shader, GLuint type, const char* source){
-	shader = glCreateShader(type);
+void create_shader(unsigned int &shader, GLuint type, const char *source)
+{
+    shader = glCreateShader(type);
     glShaderSource(shader, 1, &source, nullptr);
     glCompileShader(shader);
     // check for shader compile errors
@@ -178,17 +176,18 @@ void create_shader(unsigned int& shader, GLuint type, const char* source){
     if (!success)
     {
         glGetShaderInfoLog(shader, 512, nullptr, infoLog);
-        std::cout << "ERROR::SHADER::COMPILATION_FAILED\n" << infoLog << '\n';
+        std::cout << "ERROR::SHADER::COMPILATION_FAILED\n"
+                  << infoLog << '\n';
     }
 }
 
-void create_shader_program(unsigned int& shaderProgram, const unsigned int shaders[])
+void create_shader_program(unsigned int &shaderProgram, const unsigned int shaders[])
 {
-	shaderProgram = glCreateProgram();
+    shaderProgram = glCreateProgram();
 
     size_t indexCount = sizeof(shaders) / sizeof(unsigned int);
 
-    for (size_t i = 0; i < indexCount; ++i) 
+    for (size_t i = 0; i < indexCount; ++i)
     {
         glAttachShader(shaderProgram, shaders[i]);
     }
@@ -198,13 +197,15 @@ void create_shader_program(unsigned int& shaderProgram, const unsigned int shade
     int success;
     char infoLog[512];
     glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success) {
+    if (!success)
+    {
         glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n"
+                  << infoLog << std::endl;
     }
 }
 
-void create_mesh(unsigned int& VBO, unsigned int& VAO, unsigned int& EBO, const float vertices[] , const size_t verticesSize, const unsigned int indices[], const size_t indicesSize, GLuint usage)
+void create_mesh(unsigned int &VBO, unsigned int &VAO, unsigned int &EBO, const float vertices[], const size_t verticesSize, const unsigned int indices[], const size_t indicesSize, GLuint usage)
 {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -218,9 +219,9 @@ void create_mesh(unsigned int& VBO, unsigned int& VAO, unsigned int& EBO, const 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesSize, indices, usage);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
     // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
@@ -231,7 +232,7 @@ void create_mesh(unsigned int& VBO, unsigned int& VAO, unsigned int& EBO, const 
     glBindVertexArray(0);
 }
 
-void create_mesh(unsigned int& VBO, unsigned int& VAO, const float vertices[], const size_t verticesSize, GLuint usage)
+void create_mesh(unsigned int &VBO, unsigned int &VAO, const float vertices[], const size_t verticesSize, GLuint usage)
 {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -241,9 +242,9 @@ void create_mesh(unsigned int& VBO, unsigned int& VAO, const float vertices[], c
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, verticesSize, vertices, usage);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
     // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind

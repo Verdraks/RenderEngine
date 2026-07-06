@@ -1,10 +1,16 @@
 #include "glad/glad.h"
 #include "OpenglContext.h"
+#include <stdexcept>
 
 Platform::OpenglContext::OpenglContext(GLFWwindow *windowHandle) : m_windowHandle(windowHandle)
 {
 	glfwMakeContextCurrent(m_windowHandle);
-	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		throw std::runtime_error("Failed to initialize GLAD");
+	}
+
 	glfwSetFramebufferSizeCallback(m_windowHandle, UpdateContext);
 }
 
