@@ -132,6 +132,5 @@ void Shader::SetVector(const std::string &name, const std::array<float, 3> &valu
 		std::cerr << "ERROR::SHADER::UNIFORM_NOT_FOUND: " << name << '\n';
 		return;
 	}
-
 	glUniform3fv(location, 1, value.data());
 }

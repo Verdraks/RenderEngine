@@ -3,8 +3,6 @@
 Mesh::Mesh(GLuint usage)
 {
     m_usage = usage;
-    m_vertexCount = 0;
-    m_indicesCount = 0;
 
     glGenVertexArrays(1, &m_vao);
     glGenBuffers(1, &m_vbo);
@@ -50,14 +48,19 @@ void Mesh::SetVertextAttributeColor(const size_t &stride)
     SetVertexAttribute(1, 3, GL_FLOAT, stride, (void *)(3 * sizeof(float)));
 }
 
+void Mesh::SetVertexAttributeTexCoord(const size_t &stride)
+{
+    SetVertexAttribute(2, 2, GL_FLOAT, stride, (void *)(6 * sizeof(float)));
+}
+
 void Mesh::SetVertexAttribute(const int location, const int size, const GLuint type, const size_t &stride, const void *const ptrAttribute)
 {
     glBindVertexArray(m_vao);
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     glVertexAttribPointer(location, size, type, GL_FALSE, stride, ptrAttribute);
     glEnableVertexAttribArray(location);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void Mesh::Draw()

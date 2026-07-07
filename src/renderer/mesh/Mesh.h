@@ -11,6 +11,7 @@ public:
     void BindIndices(const unsigned int indices[], const size_t indicesCount);
     void SetVertexAttributePos(const size_t &stride);
     void SetVertextAttributeColor(const size_t &stride);
+    void SetVertexAttributeTexCoord(const size_t &stride);
     void Draw();
 
     unsigned int GetVao() const { return m_vao; }

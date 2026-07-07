@@ -24,3 +24,4 @@ endfunction()
 
 add_git_dependency(glfw https://github.com/glfw/glfw 3.4)
 add_subdirectory(glad-2.0.8)
+add_subdirectory(stb)
