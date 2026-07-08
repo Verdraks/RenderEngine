@@ -24,8 +24,17 @@ void Platform::OpenglContext::UpdateContext(GLFWwindow *window, int width, int h
 	glViewport(0, 0, width, height);
 }
 
-void Platform::OpenglContext::Clear()
+void Platform::OpenglContext::Clean()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0, 0, 0, 1);
+}
+
+void Platform::OpenglContext::Clear()
+{
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+	glUseProgram(0);
+	glTexBuffer(GL_TEXTURE_2D, 0, 0);
 }

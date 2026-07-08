@@ -5,6 +5,7 @@
 #include <array>
 #include <memory>
 #include <math.h>
+#include <iostream>
 
 constexpr int HEIGHT = 600;
 constexpr int WIDTH = 800;
@@ -47,18 +48,20 @@ int main()
 
     while (window->IsOpen())
     {
+        Platform::OpenglContext::Clean();
+
         window->OnPreUpdate();
 
-        Platform::OpenglContext::Clear();
-
         double time = glfwGetTime();
-        float offsetY = sin(time) * 0.5f;
-        float offsetX = cos(time) * 0.5f;
+        float offsetY = sin(time) * 5.0f;
+        float offsetX = cos(time) * 5.0f;
 
-        // shader->SetVector("vertexOffset", {offsetX, offsetY, 0.0f});
+        shader->SetVector("vertexOffset", {offsetX, offsetY, 0.0f});
         texture->Use();
         shader->Use();
         triangle->Draw();
+
+        Platform::OpenglContext::Clear();
 
         window->OnUpdate();
     }

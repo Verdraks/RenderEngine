@@ -8,6 +8,7 @@ namespace Platform
 	public:
 		OpenglContext(GLFWwindow *windowHandle);
 		void SwapBuffer() const;
+		static void Clean();
 		static void Clear();
 
 	private:
