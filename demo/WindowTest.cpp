@@ -7,12 +7,12 @@ const char *TITLE = "Window Test";
 
 int main()
 {
-	const auto *window = new Platform::Window(WIDTH, HEIGHT, TITLE);
+	const Platform::Window *window = new Platform::Window(WIDTH, HEIGHT, TITLE);
 
-	while (window->IsOpen())
+	while (window->IsValid())
 	{
-		window->OnPreUpdate();
-		window->OnUpdate();
+		window->Update();
+		window->LateUpdate();
 	}
 
 	delete window;

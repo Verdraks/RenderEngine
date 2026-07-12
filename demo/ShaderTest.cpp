@@ -1,4 +1,5 @@
 #include "Texture.h"
+#include "OpenglContext.h"
 #include "Shader.h"
 #include "Mesh.h"
 #include "Window.h"
@@ -16,8 +17,10 @@ const char *TITLE = "Window Shader Test";
 
 int main()
 {
-
     const std::unique_ptr<Platform::Window> window = std::make_unique<Platform::Window>(WIDTH, HEIGHT, TITLE);
+
+    const std::unique_ptr<Platform::IRenderContext> context = std::make_unique<Platform::OpenglContext>(window->GetNativeHandle());
+    window->SetContext(context.get());
 
     const std::string vertexShaderPath = ASSETS_DIR + std::string("/shaders/vertex_shader.glsl");
     const std::string fragmentShaderPath = ASSETS_DIR + std::string("/shaders/fragment_shader.glsl");
@@ -104,11 +107,9 @@ int main()
     shader->SetMatrix("view", glm::value_ptr(view));
     shader->SetMatrix("projection", glm::value_ptr(projection));
 
-    while (window->IsOpen())
+    while (window->IsValid())
     {
-        Platform::OpenglContext::Clean();
-
-        window->OnPreUpdate();
+        window->Update();
 
         for (unsigned int i = 0; i < 10; i++)
         {
@@ -125,9 +126,7 @@ int main()
             cube->Draw();
         }
 
-        Platform::OpenglContext::Clear();
-
-        window->OnUpdate();
+        window->LateUpdate();
     }
 
     return 0;
