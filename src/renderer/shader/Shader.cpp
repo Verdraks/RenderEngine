@@ -134,3 +134,16 @@ void Shader::SetVector(const std::string &name, const std::array<float, 3> &valu
 	}
 	glUniform3fv(location, 1, value.data());
 }
+
+void Shader::SetMatrix(const std::string &name, const float *valuePtr) const
+{
+
+	int location = glGetUniformLocation(m_id, name.c_str());
+	if (location == -1)
+	{
+		std::cerr << "ERROR::SHADER::UNIFORM_NOT_FOUND: " << name << '\n';
+		return;
+	}
+
+	glUniformMatrix4fv(location, 1, GL_FALSE, valuePtr);
+}

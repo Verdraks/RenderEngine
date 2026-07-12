@@ -6,7 +6,7 @@ target_sources(renderer PRIVATE
     "texture/Texture.cpp"
 )
 
-target_link_libraries(renderer PUBLIC glad stb)
+target_link_libraries(renderer PUBLIC glad stb glm)
 target_include_directories(renderer PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/shader
     ${CMAKE_CURRENT_SOURCE_DIR}/mesh

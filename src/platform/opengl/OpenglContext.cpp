@@ -12,6 +12,8 @@ Platform::OpenglContext::OpenglContext(GLFWwindow *windowHandle) : m_windowHandl
 	}
 
 	glfwSetFramebufferSizeCallback(m_windowHandle, UpdateContext);
+
+	glEnable(GL_DEPTH_TEST);
 }
 
 void Platform::OpenglContext::SwapBuffer() const

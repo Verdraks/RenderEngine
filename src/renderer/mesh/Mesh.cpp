@@ -1,5 +1,5 @@
 #include "Mesh.h"
-
+#include <iostream>
 Mesh::Mesh(GLuint usage)
 {
     m_usage = usage;
@@ -38,21 +38,6 @@ void Mesh::BindIndices(const unsigned int indices[], const size_t indicesCount)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void Mesh::SetVertexAttributePos(const size_t &stride)
-{
-    SetVertexAttribute(0, 3, GL_FLOAT, stride, (void *)(0));
-}
-
-void Mesh::SetVertextAttributeColor(const size_t &stride)
-{
-    SetVertexAttribute(1, 3, GL_FLOAT, stride, (void *)(3 * sizeof(float)));
-}
-
-void Mesh::SetVertexAttributeTexCoord(const size_t &stride)
-{
-    SetVertexAttribute(2, 2, GL_FLOAT, stride, (void *)(6 * sizeof(float)));
-}
-
 void Mesh::SetVertexAttribute(const int location, const int size, const GLuint type, const size_t &stride, const void *const ptrAttribute)
 {
     glBindVertexArray(m_vao);
@@ -65,7 +50,16 @@ void Mesh::SetVertexAttribute(const int location, const int size, const GLuint t
 
 void Mesh::Draw()
 {
-    glBindVertexArray(m_vao);
-    glDrawElements(GL_TRIANGLES, m_indicesCount, GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
+    if (m_indicesCount == 0)
+    {
+        glBindVertexArray(m_vao);
+        glDrawArrays(GL_TRIANGLES, 0, m_vertexCount);
+        glBindVertexArray(0);
+    }
+    else
+    {
+        glBindVertexArray(m_vao);
+        glDrawElements(GL_TRIANGLES, m_indicesCount, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
+    }
 }

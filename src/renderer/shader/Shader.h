@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include "glad/glad.h"
+#include "glm/matrix.hpp"
 
 class Shader
 {
@@ -14,6 +15,7 @@ public:
 	void SetInt(const std::string &name, int value) const;
 	void SetFloat(const std::string &name, float value) const;
 	void SetVector(const std::string &name, const std::array<float, 3> &value) const;
+	void SetMatrix(const std::string &name, const float *valuePtr) const;
 
 	unsigned int GetId() const { return m_id; }
 
