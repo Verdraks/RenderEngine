@@ -2,14 +2,17 @@ add_library(platform)
 
 target_sources(platform PRIVATE
     
-    "window/Window.cpp"
-    "renderContext/opengl/OpenglContext.cpp"
+    "glfw/GlfwWindow.cpp"
+    "opengl/OpenglBuffer.cpp"
+    "opengl/OpenglContext.cpp"
+    "opengl/OpenglGraphicsFactory.cpp"
 )
 
-target_compile_definitions(platform PUBLIC GLFW_INCLUDE_NONE)
-target_link_libraries(platform PUBLIC glfw PRIVATE glad)
 target_include_directories(platform PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/window
-    ${CMAKE_CURRENT_SOURCE_DIR}/renderContext/opengl
-    ${CMAKE_CURRENT_SOURCE_DIR}/renderContext
+${CMAKE_CURRENT_SOURCE_DIR}/glfw/include
+${CMAKE_CURRENT_SOURCE_DIR}/opengl/include
 )
+
+target_link_libraries(platform PUBLIC glfw core PRIVATE glad renderer)
+
+target_compile_definitions(platform PUBLIC GLFW_INCLUDE_NONE)

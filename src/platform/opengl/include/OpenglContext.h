@@ -1,22 +1,26 @@
 #pragma once
-#include "IRenderContext.h"
-#include "GLFW/glfw3.h"
+#include "RendererContext.h"
+
+struct GLFWwindow;
 
 namespace Platform
 {
-	class OpenglContext : public IRenderContext
-	{
-	public:
-		void Clear() override;
-		void Flush() override;
-		void SwapBuffers() override;
 
+	class OpenglContext : public Core::RendererContext
+	{
 	public:
 		OpenglContext(GLFWwindow *windowHandle);
 		~OpenglContext();
 
+	public:
+		void Init() override;
+		void Clear() override;
+		void SwapBuffers() override;
+
 	private:
 		static void UpdateContext(GLFWwindow *window, int width, int height);
+
+	private:
 		GLFWwindow *m_windowHandle = nullptr;
 	};
 }

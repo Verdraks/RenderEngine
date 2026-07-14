@@ -1,15 +1,16 @@
-#include "Texture.h"
-#include "OpenglContext.h"
 #include "Shader.h"
+#include "GlfwWindow.h"
 #include "Mesh.h"
+#include "OpenglContext.h"
+#include "Texture.h"
 #include "Window.h"
 #include <array>
-#include <memory>
-#include <math.h>
-#include <iostream>
-#include <glm/matrix.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/matrix.hpp>
+#include <iostream>
+#include <math.h>
+#include <memory>
 
 constexpr int HEIGHT = 600;
 constexpr int WIDTH = 800;
@@ -17,10 +18,10 @@ const char *TITLE = "Window Shader Test";
 
 int main()
 {
-    const std::unique_ptr<Platform::Window> window = std::make_unique<Platform::Window>(WIDTH, HEIGHT, TITLE);
+    const Core::WindowProperties properties{WIDTH, HEIGHT, TITLE};
 
-    const std::unique_ptr<Platform::IRenderContext> context = std::make_unique<Platform::OpenglContext>(window->GetNativeHandle());
-    window->SetContext(context.get());
+    const std::unique_ptr<Core::RendererContext> context = std::make_unique<Platform::OpenglContext>();
+    const std::unique_ptr<Core::Window> window = std::make_unique<Platform::GlfwWindow>(properties, std::move(context));
 
     const std::string vertexShaderPath = ASSETS_DIR + std::string("/shaders/vertex_shader.glsl");
     const std::string fragmentShaderPath = ASSETS_DIR + std::string("/shaders/fragment_shader.glsl");
@@ -109,7 +110,6 @@ int main()
 
     while (window->IsValid())
     {
-        window->Update();
 
         for (unsigned int i = 0; i < 10; i++)
         {
@@ -125,8 +125,7 @@ int main()
             texture->Use();
             cube->Draw();
         }
-
-        window->LateUpdate();
+        window->Update();
     }
 
     return 0;
