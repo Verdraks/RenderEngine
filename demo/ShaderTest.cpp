@@ -20,7 +20,7 @@ int main()
 {
     const Core::WindowProperties properties{WIDTH, HEIGHT, TITLE};
 
-    const std::unique_ptr<Core::RendererContext> context = std::make_unique<Platform::OpenglContext>();
+    std::unique_ptr<Core::RendererContext> context = std::make_unique<Platform::OpenglContext>();
     const std::unique_ptr<Core::Window> window = std::make_unique<Platform::GlfwWindow>(properties, std::move(context));
 
     const std::string vertexShaderPath = ASSETS_DIR + std::string("/shaders/vertex_shader.glsl");

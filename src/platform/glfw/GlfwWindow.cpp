@@ -22,7 +22,7 @@ Platform::GlfwWindow::GlfwWindow(const Core::WindowProperties &properties, std::
 
 	if (m_context != nullptr)
 	{
-		m_context->Init();
+		m_context->Init(m_windowHandle);
 	}
 	else
 	{

@@ -16,7 +16,7 @@ namespace Core
     {
     public:
         Window(const WindowProperties &properties, std::unique_ptr<Core::RendererContext> context);
-        virtual ~Window() = 0;
+        virtual ~Window() = default;
 
         virtual void Update() const = 0;
         virtual bool IsValid() const = 0;
@@ -30,7 +30,7 @@ namespace Core
         int m_height = 0;
         std::unique_ptr<Core::RendererContext> m_context = nullptr;
     };
-    inline Window::~Window() {}
+
     inline Window::Window(const WindowProperties &properties, std::unique_ptr<Core::RendererContext> context)
         : m_width(properties.width), m_height(properties.height), m_context(std::move(context))
     {
