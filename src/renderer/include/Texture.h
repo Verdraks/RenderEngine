@@ -1,15 +1,21 @@
 #pragma once
-#include <stb_image.h>
 
-class Texture
+namespace Renderer
 {
-public:
-    Texture(const char *path);
-    ~Texture();
+    class Texture
+    {
+    public:
+        Texture(const char *path) {}
+        virtual ~Texture() = default;
 
-    void Use();
+        virtual void Bind() = 0;
+        virtual void Unbind() = 0;
 
-private:
-    int m_width, m_height, m_nrChannels;
-    unsigned int m_texture;
-};
+    public:
+        int GetWidth() const { return m_width; }
+        int GetHeight() const { return m_height; }
+
+    protected:
+        int m_width, m_height;
+    };
+}

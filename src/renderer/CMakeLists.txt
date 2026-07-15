@@ -3,7 +3,6 @@ add_library(renderer)
 target_sources(renderer PRIVATE
     "Shader.cpp"
     "Mesh.cpp"
-    "Texture.cpp"
 )
 
 target_include_directories(renderer PUBLIC

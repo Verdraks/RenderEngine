@@ -2,8 +2,7 @@
 #include "GlfwWindow.h"
 #include "Mesh.h"
 #include "OpenglContext.h"
-#include "Texture.h"
-#include "Window.h"
+#include "OpenglTexture.h"
 #include <array>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -29,7 +28,7 @@ int main()
 
     const std::unique_ptr<Shader> shader = std::make_unique<Shader>(vertexShaderPath.c_str(), fragmentShaderPath.c_str());
 
-    const std::unique_ptr<Texture> texture = std::make_unique<Texture>(texturePath.c_str());
+    const std::unique_ptr<Renderer::Texture> texture = std::make_unique<Platform::OpenglTexture>(texturePath.c_str());
 
     float vertices[] = {
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
@@ -122,7 +121,7 @@ int main()
 
             shader->SetMatrix("model", glm::value_ptr(model));
 
-            texture->Use();
+            texture->Bind();
             cube->Draw();
         }
         window->Update();
