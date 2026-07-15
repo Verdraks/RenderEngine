@@ -4,13 +4,9 @@
 #include <GLFW/glfw3.h>
 #include <stdexcept>
 
-Platform::OpenglContext::OpenglContext(GLFWwindow *windowHandle)
-	: m_windowHandle(windowHandle)
+void Platform::OpenglContext::Init(void *nativeHandle)
 {
-}
-
-void Platform::OpenglContext::Init()
-{
+	m_windowHandle = static_cast<GLFWwindow *>(nativeHandle);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	glfwMakeContextCurrent(m_windowHandle);
@@ -23,6 +19,10 @@ void Platform::OpenglContext::Init()
 	glfwSetFramebufferSizeCallback(m_windowHandle, UpdateContext);
 
 	glEnable(GL_DEPTH_TEST);
+}
+
+Platform::OpenglContext::OpenglContext()
+{
 }
 
 Platform::OpenglContext::~OpenglContext()

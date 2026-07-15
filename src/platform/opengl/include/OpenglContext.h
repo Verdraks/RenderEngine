@@ -9,11 +9,11 @@ namespace Platform
 	class OpenglContext : public Core::RendererContext
 	{
 	public:
-		OpenglContext(GLFWwindow *windowHandle);
+		OpenglContext();
 		~OpenglContext();
 
 	public:
-		void Init() override;
+		void Init(void *nativeHandle) override;
 		void Clear() override;
 		void SwapBuffers() override;
 

@@ -6,7 +6,7 @@ namespace Renderer
     {
     public:
         VertexBuffer(const void *data, unsigned int size, unsigned int usage) {};
-        ~VertexBuffer() = default;
+        virtual ~VertexBuffer() = default;
 
         virtual void Bind() = 0;
         virtual void Unbind() = 0;
