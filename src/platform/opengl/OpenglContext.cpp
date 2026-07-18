@@ -7,6 +7,7 @@
 void Platform::OpenglContext::Init(void *nativeHandle)
 {
 	m_windowHandle = static_cast<GLFWwindow *>(nativeHandle);
+	// TODO:Call window hint before creating the window, not after. Init should be called after the window is created, not before. Move the window hint calls to the context constructor.
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	glfwMakeContextCurrent(m_windowHandle);

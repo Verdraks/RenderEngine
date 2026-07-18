@@ -4,6 +4,8 @@ target_sources(platform PRIVATE
     
     "glfw/GlfwWindow.cpp"
     "opengl/OpenglBuffer.cpp"
+    "opengl/OpenglMesh.cpp"
+    "opengl/OpenglShader.cpp"
     "opengl/OpenglTexture.cpp"
     "opengl/OpenglContext.cpp"
     "opengl/OpenglGraphicsFactory.cpp"

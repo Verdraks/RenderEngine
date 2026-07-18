@@ -4,15 +4,15 @@
 
 namespace Platform
 {
-    class OpenglTexture : public Renderer::Texture
+    class OpenglTexture final : public Renderer::Texture
     {
     public:
         OpenglTexture(const char *path);
         ~OpenglTexture();
 
     public:
-        void Bind() override;
-        void Unbind() override;
+        void Bind() override final;
+        void Unbind() override final;
 
     private:
         unsigned int m_id;

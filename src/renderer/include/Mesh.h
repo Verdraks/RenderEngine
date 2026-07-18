@@ -1,26 +1,19 @@
 #pragma once
-#include <string>
 #include "glad/glad.h"
+#include <string>
 
-class Mesh
+namespace Renderer
 {
-public:
-    Mesh(GLuint usage);
-    ~Mesh();
-    void BindVertices(const float vertices[], const size_t verticesCount);
-    void BindIndices(const unsigned int indices[], const size_t indicesCount);
-    void SetVertexAttribute(const int location, const int size, const GLuint type, const size_t &stride, const void *const ptrAttribute);
-    void Draw();
+    class Mesh
+    {
+    public:
+        Mesh(const float vertices[], const unsigned int verticesCount) {}
+        Mesh(const float vertices[], const unsigned int verticesCount, const unsigned int indices[], const unsigned int indicesCount) {}
+        virtual ~Mesh() = default;
 
-    unsigned int GetVao() const { return m_vao; }
-    unsigned int GetVbo() const { return m_vbo; }
-    unsigned int GetEbo() const { return m_ebo; }
-
-private:
-    unsigned int m_vbo, m_vao, m_ebo;
-
-    unsigned int m_vertexCount = 0;
-    unsigned int m_indicesCount = 0;
-
-    GLuint m_usage;
-};
+        virtual void SetVertexAttribute(const int location, const int size, const GLuint type, const size_t &stride, const void *const ptrAttribute) = 0;
+        virtual void MarkDynamic() = 0;
+        virtual void MarkStatic() = 0;
+        virtual void Draw() const = 0;
+    };
+}

@@ -4,40 +4,40 @@
 
 namespace Platform
 {
-    class OpenglVertexBuffer : public Renderer::VertexBuffer
+    class OpenglVertexBuffer final : public Renderer::VertexBuffer
     {
     public:
-        OpenglVertexBuffer(const void *data, unsigned int size, unsigned int usage);
+        OpenglVertexBuffer(const float *data, unsigned int count, unsigned int usage);
         ~OpenglVertexBuffer();
 
-        void Bind() override;
-        void Unbind() override;
+        void Bind() override final;
+        void Unbind() override final;
 
     private:
         unsigned int m_id;
     };
 
-    class OpenglIndexBuffer : public Renderer::IndexBuffer
+    class OpenglIndexBuffer final : public Renderer::IndexBuffer
     {
     public:
         OpenglIndexBuffer(const unsigned int *data, unsigned int count, unsigned int usage);
         ~OpenglIndexBuffer();
 
-        void Bind() override;
-        void Unbind() override;
+        void Bind() override final;
+        void Unbind() override final;
 
     private:
         unsigned int m_id;
     };
 
-    class OpenglVertexArrayBuffer : public Renderer::VertexArrayBuffer
+    class OpenglVertexArrayBuffer final : public Renderer::VertexArrayBuffer
     {
     public:
         OpenglVertexArrayBuffer();
         ~OpenglVertexArrayBuffer();
 
-        void Bind() override;
-        void Unbind() override;
+        void Bind() override final;
+        void Unbind() override final;
 
     private:
         unsigned int m_id;

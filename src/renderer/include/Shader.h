@@ -1,34 +1,22 @@
 #pragma once
-#include "glad/glad.h"
-#include "glm/matrix.hpp"
+#include <array>
 #include <string>
-#include <vector>
 
 namespace Renderer
 {
-
 	class Shader
 	{
 	public:
-		Shader(const char *vertexPath, const char *fragmentPath);
+		Shader(const char *vertexPath, const char *fragmentPath) {};
 		virtual ~Shader() = default;
 
-		virtual void Bind() const;
-		virtual void Unbind() const;
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
 
-		virtual void SetUniform(const std::string &name, const void *valuePtr, const size_t &size) const;
-
-		void SetBool(const std::string &name, bool value) const;
-		void SetInt(const std::string &name, int value) const;
-		void SetFloat(const std::string &name, float value) const;
-		void SetVector(const std::string &name, const std::array<float, 3> &value) const;
-		void SetMatrix(const std::string &name, const float *valuePtr) const;
-
-		unsigned int GetId() const { return m_id; }
-
-	private:
-		unsigned int m_id;
-		void CompileShader(unsigned int &shader, const char *shaderCode, const GLuint shaderType);
-		void CompileShaderProgram(const std::vector<unsigned int> &shaders);
+		virtual void SetBool(const std::string &name, const bool &value) const = 0;
+		virtual void SetInt(const std::string &name, const int &value) const = 0;
+		virtual void SetFloat(const std::string &name, const float &value) const = 0;
+		virtual void SetVector(const std::string &name, const std::array<float, 3> &value) const = 0;
+		virtual void SetMatrix(const std::string &name, const float *valuePtr) const = 0;
 	};
 }
