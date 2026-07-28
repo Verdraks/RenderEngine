@@ -8,7 +8,7 @@ target_sources(platform PRIVATE
     "opengl/OpenglShader.cpp"
     "opengl/OpenglTexture.cpp"
     "opengl/OpenglContext.cpp"
-    "opengl/OpenglGraphicsFactory.cpp"
+    "opengl/OpenglRendererFactory.cpp"
 )
 
 target_include_directories(platform PUBLIC

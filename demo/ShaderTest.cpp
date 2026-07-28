@@ -1,3 +1,5 @@
+#include "OpenglRendererFactory.h"
+
 #include "GlfwWindow.h"
 #include "OpenglContext.h"
 #include "OpenglMesh.h"
@@ -19,6 +21,8 @@ int main()
 {
     const Core::WindowProperties properties{WIDTH, HEIGHT, TITLE};
 
+    const std::unique_ptr<Core::RendererFactory> rendererFactory = std::make_unique<Platform::OpenglRendererFactory>();
+
     std::unique_ptr<Core::RendererContext> context = std::make_unique<Platform::OpenglContext>();
     const std::unique_ptr<Core::Window> window = std::make_unique<Platform::GlfwWindow>(properties, std::move(context));
 
@@ -26,9 +30,9 @@ int main()
     const std::string fragmentShaderPath = ASSETS_DIR + std::string("/shaders/fragment_shader.glsl");
     const std::string texturePath = ASSETS_DIR + std::string("/textures/wall.jpg");
 
-    const std::unique_ptr<Renderer::Shader> shader = std::make_unique<Platform::OpenglShader>(vertexShaderPath.c_str(), fragmentShaderPath.c_str());
+    const std::unique_ptr<Renderer::Shader> shader = std::unique_ptr<Renderer::Shader>(rendererFactory->CreateShader(vertexShaderPath.c_str(), fragmentShaderPath.c_str()));
 
-    const std::unique_ptr<Renderer::Texture> texture = std::make_unique<Platform::OpenglTexture>(texturePath.c_str());
+    const std::unique_ptr<Renderer::Texture> texture = std::unique_ptr<Renderer::Texture>(rendererFactory->CreateTexture(texturePath.c_str()));
 
     float vertices[] = {
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
@@ -76,7 +80,7 @@ int main()
     size_t verticesCount = std::size(vertices);
     size_t stride = 5 * sizeof(float);
 
-    const std::unique_ptr<Renderer::Mesh> cube = std::make_unique<Platform::OpenglMesh>(vertices, verticesCount);
+    const std::unique_ptr<Renderer::Mesh> cube = std::unique_ptr<Renderer::Mesh>(rendererFactory->CreateMesh(vertices, verticesCount));
     cube->SetVertexAttribute(0, 3, GL_FLOAT, stride, (void *)0);
     cube->SetVertexAttribute(1, 2, GL_FLOAT, stride, (void *)(3 * sizeof(float)));
 

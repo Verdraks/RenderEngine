@@ -1,13 +1,9 @@
 #pragma once
 
-/// @brief Forward declaration of classes used in the RendererFactory interface.
-class Shader;
-/// @brief Forward declaration of classes used in the RendererFactory interface.
-class VertexBuffer;
-/// @brief Forward declaration of classes used in the RendererFactory interface.
-class IndexBuffer;
-/// @brief Forward declaration of classes used in the RendererFactory interface.
-class VertexArrayBuffer;
+#include "Buffer.h"
+#include "Mesh.h"
+#include "Shader.h"
+#include "Texture.h"
 
 namespace Core
 {
@@ -16,9 +12,15 @@ namespace Core
     public:
         virtual ~RendererFactory() = default;
 
-        virtual Shader *CreateShader(const char *vertexSource, const char *fragmentSource) = 0;
-        virtual VertexBuffer *CreateVertexBuffer(const void *data, unsigned int size, unsigned int usage) = 0;
-        virtual IndexBuffer *CreateIndexBuffer(const unsigned int *data, unsigned int count, unsigned int usage) = 0;
-        virtual VertexArrayBuffer *CreateVertexArrayBuffer() = 0;
+        virtual Renderer::Mesh *CreateMesh(const float vertices[], const unsigned int verticesCount) = 0;
+        virtual Renderer::Mesh *CreateMesh(const float vertices[], const unsigned int verticesCount, const unsigned int indices[], const unsigned int indicesCount) = 0;
+
+        virtual Renderer::Shader *CreateShader(const char *vertexSource, const char *fragmentSource) = 0;
+
+        virtual Renderer::VertexBuffer *CreateVertexBuffer(const float *data, unsigned int size, unsigned int usage) = 0;
+        virtual Renderer::IndexBuffer *CreateIndexBuffer(const unsigned int *data, unsigned int count, unsigned int usage) = 0;
+        virtual Renderer::VertexArrayBuffer *CreateVertexArrayBuffer() = 0;
+
+        virtual Renderer::Texture *CreateTexture(const char *filePath) = 0;
     };
 }
