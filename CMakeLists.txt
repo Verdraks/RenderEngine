@@ -16,6 +16,7 @@ add_compile_definitions(ASSETS_DIR="${ASSETS_DIR}")
 add_subdirectory(thirdparty)
 add_subdirectory(src/platform)
 add_subdirectory(src/renderer)
+add_subdirectory(src/core)
 add_subdirectory(demo)
 
 if (TEST_INCLUDE)

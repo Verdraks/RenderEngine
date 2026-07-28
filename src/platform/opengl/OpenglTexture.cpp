@@ -1,11 +1,13 @@
-#include "Texture.h"
+#include "OpenglTexture.h"
+
 #include "glad/glad.h"
 #include <iostream>
+#include <stb_image.h>
 
-Texture::Texture(const char *path)
+Platform::OpenglTexture::OpenglTexture(const char *path) : Texture(path)
 {
-    glGenTextures(1, &m_texture);
-    glBindTexture(GL_TEXTURE_2D, m_texture);
+    glGenTextures(1, &m_id);
+    glBindTexture(GL_TEXTURE_2D, m_id);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -23,7 +25,7 @@ Texture::Texture(const char *path)
 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 
-        // Generate level Mipmap until texture less equals than 1px, not optimized.
+        // TODO: Generate level Mipmap until texture less equals than 1px, not optimized.
         glGenerateMipmap(GL_TEXTURE_2D);
     }
 
@@ -32,13 +34,18 @@ Texture::Texture(const char *path)
     stbi_image_free(data);
 }
 
-Texture::~Texture()
+Platform::OpenglTexture::~OpenglTexture()
 {
-    glDeleteTextures(1, &m_texture);
+    glDeleteTextures(1, &m_id);
 }
 
-void Texture::Use()
+void Platform::OpenglTexture::Bind()
 {
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, m_texture);
+    glBindTexture(GL_TEXTURE_2D, m_id);
+}
+
+void Platform::OpenglTexture::Unbind()
+{
+    glBindTexture(GL_TEXTURE_2D, 0);
 }

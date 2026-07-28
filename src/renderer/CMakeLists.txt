@@ -1,14 +1,7 @@
-add_library(renderer)
+add_library(renderer INTERFACE)
 
-target_sources(renderer PRIVATE
-    "shader/Shader.cpp"
-    "mesh/Mesh.cpp"
-    "texture/Texture.cpp"
+target_include_directories(renderer INTERFACE
+${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-target_link_libraries(renderer PUBLIC glad stb glm)
-target_include_directories(renderer PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/shader
-    ${CMAKE_CURRENT_SOURCE_DIR}/mesh
-    ${CMAKE_CURRENT_SOURCE_DIR}/texture
-)
+target_link_libraries(renderer INTERFACE glad stb glm)

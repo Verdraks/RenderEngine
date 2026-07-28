@@ -1,4 +1,4 @@
-#include "Window.h"
+#include "GlfwWindow.h"
 #include "OpenglContext.h"
 
 constexpr int HEIGHT = 600;
@@ -7,12 +7,14 @@ const char *TITLE = "Window Test";
 
 int main()
 {
-	const Platform::Window *window = new Platform::Window(WIDTH, HEIGHT, TITLE);
+
+	const Core::WindowProperties properties{WIDTH, HEIGHT, TITLE};
+
+	const Platform::GlfwWindow *window = new Platform::GlfwWindow(properties, nullptr);
 
 	while (window->IsValid())
 	{
 		window->Update();
-		window->LateUpdate();
 	}
 
 	delete window;
