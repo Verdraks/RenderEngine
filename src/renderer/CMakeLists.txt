@@ -1,7 +1,9 @@
-add_library(renderer INTERFACE)
+add_library(renderer)
 
-target_include_directories(renderer INTERFACE
+target_sources(renderer PRIVATE "Camera.cpp")
+
+target_include_directories(renderer PUBLIC
 ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-target_link_libraries(renderer INTERFACE glad stb glm)
+target_link_libraries(renderer PUBLIC glad glm PRIVATE stb)

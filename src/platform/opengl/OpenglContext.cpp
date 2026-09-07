@@ -17,8 +17,6 @@ void Platform::OpenglContext::Init(void *nativeHandle)
 		throw std::runtime_error("Failed to initialize GLAD");
 	}
 
-	glfwSetFramebufferSizeCallback(m_windowHandle, UpdateContext);
-
 	glEnable(GL_DEPTH_TEST);
 }
 
@@ -32,7 +30,7 @@ Platform::OpenglContext::~OpenglContext()
 	glfwSetFramebufferSizeCallback(m_windowHandle, nullptr);
 }
 
-void Platform::OpenglContext::UpdateContext(GLFWwindow *window, int width, int height)
+void Platform::OpenglContext::UpdateContext(int width, int height)
 {
 	glViewport(0, 0, width, height);
 }

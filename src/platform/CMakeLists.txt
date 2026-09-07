@@ -16,6 +16,6 @@ ${CMAKE_CURRENT_SOURCE_DIR}/glfw/include
 ${CMAKE_CURRENT_SOURCE_DIR}/opengl/include
 )
 
-target_link_libraries(platform PUBLIC glfw core PRIVATE glad renderer)
+target_link_libraries(platform PUBLIC glfw core PRIVATE glad renderer stb)
 
 target_compile_definitions(platform PUBLIC GLFW_INCLUDE_NONE)

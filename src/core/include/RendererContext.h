@@ -10,5 +10,6 @@ namespace Core
         virtual void Init(void *nativeHandle) = 0;
         virtual void Clear() = 0;
         virtual void SwapBuffers() = 0;
+        virtual void UpdateContext(int width, int height) = 0;
     };
 }

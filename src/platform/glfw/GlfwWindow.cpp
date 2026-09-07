@@ -14,6 +14,16 @@ Platform::GlfwWindow::GlfwWindow(const Core::WindowProperties &properties, std::
 
 	m_windowHandle = glfwCreateWindow(properties.width, properties.height, properties.title, nullptr, nullptr);
 
+	glfwSetWindowUserPointer(m_windowHandle, this);
+
+	constexpr auto framebufferSizeCallback = [](GLFWwindow *window, int width, int height)
+	{
+		auto *self = static_cast<Platform::GlfwWindow *>(glfwGetWindowUserPointer(window));
+		self->m_onResize(width, height);
+	};
+
+	glfwSetFramebufferSizeCallback(m_windowHandle, framebufferSizeCallback);
+
 	if (m_windowHandle == nullptr)
 	{
 		glfwTerminate();
@@ -23,6 +33,7 @@ Platform::GlfwWindow::GlfwWindow(const Core::WindowProperties &properties, std::
 	if (m_context != nullptr)
 	{
 		m_context->Init(m_windowHandle);
+		m_onResize += std::bind(&Core::RendererContext::UpdateContext, m_context.get(), std::placeholders::_1, std::placeholders::_2);
 	}
 	else
 	{
@@ -59,4 +70,5 @@ void Platform::GlfwWindow::Update() const
 	}
 
 	glfwPollEvents();
+	m_onUpdate();
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace Renderer
 {
@@ -11,7 +11,12 @@ namespace Renderer
         virtual ~Camera() = default;
 
         void SetPosition(const glm::vec3 &position);
-        void SetOrientation(const glm::vec3 &right, const glm::vec3 &up, const glm::vec3 &forward);
+        void SetRotation(const glm::vec4 &rotation);
+
+        void SetFov(const float &fov);
+        void SetNearPlane(const float &nearPlane);
+        void SetFarPlane(const float &farPlane);
+        void SetAspectRatio(const glm::vec2 &screenSize);
 
         inline const glm::vec3 &GetPosition() const { return m_position; }
         inline const glm::vec3 &GetRight() const { return m_right; }
@@ -21,7 +26,16 @@ namespace Renderer
         inline const glm::mat4 &GetProjectionMatrix() const { return m_projectionMatrix; }
 
     private:
+        void UpdateViewMatrix();
+        void UpdateProjectionMatrix();
+
+    private:
+        float m_fov;
+        float m_aspectRatio;
+        glm::vec2 m_clippingPlane;
+
         glm::vec3 m_position;
+
         glm::vec3 m_right;
         glm::vec3 m_up;
         glm::vec3 m_forward;

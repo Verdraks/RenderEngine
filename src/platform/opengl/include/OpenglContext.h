@@ -17,9 +17,10 @@ namespace Platform
 		void Init(void *nativeHandle) override final;
 		void Clear() override final;
 		void SwapBuffers() override final;
+		void UpdateContext(int width, int height) override final;
 
 	private:
-		static void UpdateContext(GLFWwindow *window, int width, int height);
+		// static void UpdateContext(GLFWwindow *window, int width, int height);
 
 	private:
 		GLFWwindow *m_windowHandle = nullptr;

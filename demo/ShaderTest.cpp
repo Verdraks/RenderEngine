@@ -1,5 +1,6 @@
 #include "OpenglRendererFactory.h"
 
+#include "Camera.h"
 #include "GlfwWindow.h"
 #include "OpenglContext.h"
 #include "OpenglMesh.h"
@@ -24,7 +25,7 @@ int main()
     const std::unique_ptr<Core::RendererFactory> rendererFactory = std::make_unique<Platform::OpenglRendererFactory>();
 
     std::unique_ptr<Core::RendererContext> context = std::make_unique<Platform::OpenglContext>();
-    const std::unique_ptr<Core::Window> window = std::make_unique<Platform::GlfwWindow>(properties, std::move(context));
+    const std::unique_ptr<Platform::GlfwWindow> window = std::make_unique<Platform::GlfwWindow>(properties, std::move(context));
 
     const std::string vertexShaderPath = ASSETS_DIR + std::string("/shaders/vertex_shader.glsl");
     const std::string fragmentShaderPath = ASSETS_DIR + std::string("/shaders/fragment_shader.glsl");
@@ -33,6 +34,8 @@ int main()
     const std::unique_ptr<Renderer::Shader> shader = std::unique_ptr<Renderer::Shader>(rendererFactory->CreateShader(vertexShaderPath.c_str(), fragmentShaderPath.c_str()));
 
     const std::unique_ptr<Renderer::Texture> texture = std::unique_ptr<Renderer::Texture>(rendererFactory->CreateTexture(texturePath.c_str()));
+
+    const std::unique_ptr<Renderer::Camera> camera = std::make_unique<Renderer::Camera>();
 
     float vertices[] = {
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
@@ -101,9 +104,35 @@ int main()
     view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
     projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
 
-    shader->Bind();
-    shader->SetMatrix("view", glm::value_ptr(view));
-    shader->SetMatrix("projection", glm::value_ptr(projection));
+    window->GetOnUpdateAction() += [&camera, &window]()
+    {
+        const float cameraSpeed = 0.001f;
+        static float lastFrameTime = 0.0f;
+        float currentFrameTime = glfwGetTime();
+        float deltaTime = currentFrameTime - lastFrameTime;
+        float speed = cameraSpeed * deltaTime;
+        if (glfwGetKey(window->GetNativeHandle(), GLFW_KEY_W) == GLFW_PRESS)
+            camera->SetPosition(camera->GetPosition() + speed * camera->GetForward());
+        if (glfwGetKey(window->GetNativeHandle(), GLFW_KEY_S) == GLFW_PRESS)
+            camera->SetPosition(camera->GetPosition() - speed * camera->GetForward());
+        if (glfwGetKey(window->GetNativeHandle(), GLFW_KEY_A) == GLFW_PRESS)
+            camera->SetPosition(camera->GetPosition() - speed * camera->GetRight());
+        if (glfwGetKey(window->GetNativeHandle(), GLFW_KEY_D) == GLFW_PRESS)
+            camera->SetPosition(camera->GetPosition() + speed * camera->GetRight());
+    };
+
+    // window->GetOnResizeAction() += [&camera](int width, int height)
+    // {
+    //     camera->SetAspectRatio(glm::vec2(width, height));
+    // };
+
+    window->GetOnUpdateAction() += [&shader, &camera]()
+    {
+        shader->Bind();
+        shader->SetMatrix("view", glm::value_ptr(camera->GetViewMatrix()));
+        shader->SetMatrix("projection", glm::value_ptr(camera->GetProjectionMatrix()));
+        shader->Unbind();
+    };
 
     while (window->IsValid())
     {

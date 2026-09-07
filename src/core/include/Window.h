@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Action.hpp"
 #include "RendererContext.h"
 #include <memory>
 
@@ -24,11 +25,15 @@ namespace Core
     public:
         int GetWidth() const { return m_width; }
         int GetHeight() const { return m_height; }
+        Action<> &GetOnUpdateAction() { return m_onUpdate; }
+        Action<int, int> &GetOnResizeAction() { return m_onResize; }
 
     protected:
         int m_width = 0;
         int m_height = 0;
         std::unique_ptr<Core::RendererContext> m_context = nullptr;
+        Action<int, int> m_onResize;
+        Action<> m_onUpdate;
     };
 
     inline Window::Window(const WindowProperties &properties, std::unique_ptr<Core::RendererContext> context)
