@@ -1,11 +1,10 @@
-#include "OpenglRendererFactory.h"
 
+#include "Shader.h"
 #include "Camera.h"
-#include "GlfwWindow.h"
-#include "OpenglContext.h"
-#include "OpenglMesh.h"
-#include "OpenglShader.h"
-#include "OpenglTexture.h"
+#include "Mesh.h"
+#include "Texture.h"
+#include "Window.h"
+#include "WindowOpenglContext.h"
 #include <array>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -22,18 +21,15 @@ int main()
 {
     const Core::WindowProperties properties{WIDTH, HEIGHT, TITLE};
 
-    const std::unique_ptr<Core::RendererFactory> rendererFactory = std::make_unique<Platform::OpenglRendererFactory>();
-
-    std::unique_ptr<Core::RendererContext> context = std::make_unique<Platform::OpenglContext>();
-    const std::unique_ptr<Platform::GlfwWindow> window = std::make_unique<Platform::GlfwWindow>(properties, std::move(context));
+    const std::unique_ptr<Core::Window> window = std::make_unique<Core::Window>(properties);
 
     const std::string vertexShaderPath = ASSETS_DIR + std::string("/shaders/vertex_shader.glsl");
     const std::string fragmentShaderPath = ASSETS_DIR + std::string("/shaders/fragment_shader.glsl");
     const std::string texturePath = ASSETS_DIR + std::string("/textures/wall.jpg");
 
-    const std::unique_ptr<Renderer::Shader> shader = std::unique_ptr<Renderer::Shader>(rendererFactory->CreateShader(vertexShaderPath.c_str(), fragmentShaderPath.c_str()));
+    const std::unique_ptr<Renderer::Shader> shader = std::make_unique<Renderer::Shader>(vertexShaderPath.c_str(), fragmentShaderPath.c_str());
 
-    const std::unique_ptr<Renderer::Texture> texture = std::unique_ptr<Renderer::Texture>(rendererFactory->CreateTexture(texturePath.c_str()));
+    const std::unique_ptr<Renderer::Texture> texture = std::make_unique<Renderer::Texture>(texturePath.c_str());
 
     const std::unique_ptr<Renderer::Camera> camera = std::make_unique<Renderer::Camera>();
 
@@ -83,7 +79,7 @@ int main()
     size_t verticesCount = std::size(vertices);
     size_t stride = 5 * sizeof(float);
 
-    const std::unique_ptr<Renderer::Mesh> cube = std::unique_ptr<Renderer::Mesh>(rendererFactory->CreateMesh(vertices, verticesCount));
+    const std::unique_ptr<Renderer::Mesh> cube = std::make_unique<Renderer::Mesh>(vertices, verticesCount);
     cube->SetVertexAttribute(0, 3, GL_FLOAT, stride, (void *)0);
     cube->SetVertexAttribute(1, 2, GL_FLOAT, stride, (void *)(3 * sizeof(float)));
 

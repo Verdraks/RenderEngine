@@ -1,11 +1,13 @@
 #pragma once
 
 #include "Action.hpp"
-#include "RendererContext.h"
+#include "WindowOpenglContext.h"
+#include <GLFW/glfw3.h>
 #include <memory>
 
 namespace Core
 {
+
     struct WindowProperties
     {
         const int width = 0;
@@ -13,14 +15,14 @@ namespace Core
         const char *title = nullptr;
     };
 
-    class Window
+    class Window final
     {
     public:
-        Window(const WindowProperties &properties, std::unique_ptr<Core::RendererContext> context);
-        virtual ~Window() = default;
+        Window(const WindowProperties &properties);
+        ~Window();
 
-        virtual void Update() const = 0;
-        virtual bool IsValid() const = 0;
+        void Update();
+        bool IsValid() const { return m_windowHandle != nullptr && !glfwWindowShouldClose(this->m_windowHandle); }
 
     public:
         int GetWidth() const { return m_width; }
@@ -28,16 +30,15 @@ namespace Core
         Action<> &GetOnUpdateAction() { return m_onUpdate; }
         Action<int, int> &GetOnResizeAction() { return m_onResize; }
 
-    protected:
+        GLFWwindow *GetNativeHandle() const { return m_windowHandle; }
+
+    private:
         int m_width = 0;
         int m_height = 0;
-        std::unique_ptr<Core::RendererContext> m_context = nullptr;
         Action<int, int> m_onResize;
         Action<> m_onUpdate;
-    };
 
-    inline Window::Window(const WindowProperties &properties, std::unique_ptr<Core::RendererContext> context)
-        : m_width(properties.width), m_height(properties.height), m_context(std::move(context))
-    {
-    }
+        std::unique_ptr<Renderer::WindowOpenglContext> m_context;
+        GLFWwindow *m_windowHandle = nullptr;
+    };
 }

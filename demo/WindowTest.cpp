@@ -1,5 +1,4 @@
-#include "GlfwWindow.h"
-#include "OpenglContext.h"
+#include "Window.h"
 
 constexpr int HEIGHT = 600;
 constexpr int WIDTH = 800;
@@ -10,7 +9,7 @@ int main()
 
 	const Core::WindowProperties properties{WIDTH, HEIGHT, TITLE};
 
-	const Platform::GlfwWindow *window = new Platform::GlfwWindow(properties, nullptr);
+	Core::Window *window = new Core::Window(properties);
 
 	while (window->IsValid())
 	{

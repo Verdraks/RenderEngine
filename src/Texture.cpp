@@ -1,10 +1,12 @@
-#include "OpenglTexture.h"
+#include "Texture.h"
 
 #include "glad/glad.h"
 #include <iostream>
 #include <stb_image.h>
 
-Platform::OpenglTexture::OpenglTexture(const char *path) : Texture(path)
+using namespace Renderer;
+
+Texture::Texture(const char *path)
 {
     glGenTextures(1, &m_id);
     glBindTexture(GL_TEXTURE_2D, m_id);
@@ -34,18 +36,18 @@ Platform::OpenglTexture::OpenglTexture(const char *path) : Texture(path)
     stbi_image_free(data);
 }
 
-Platform::OpenglTexture::~OpenglTexture()
+Texture::~Texture()
 {
     glDeleteTextures(1, &m_id);
 }
 
-void Platform::OpenglTexture::Bind()
+void Texture::Bind()
 {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_id);
 }
 
-void Platform::OpenglTexture::Unbind()
+void Texture::Unbind()
 {
     glBindTexture(GL_TEXTURE_2D, 0);
 }

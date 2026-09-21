@@ -1,13 +1,14 @@
-#include "OpenglMesh.h"
+#include "Mesh.h"
+#include "glad/glad.h"
 #include <iostream>
 #include <stdexcept>
 
-using namespace Platform;
+using namespace Renderer;
 
-OpenglMesh::OpenglMesh(const float vertices[], const unsigned int verticesCount) : Renderer::Mesh(vertices, verticesCount)
+Mesh::Mesh(const float vertices[], const unsigned int verticesCount)
 {
-    m_vertexBuffer = std::make_unique<OpenglVertexBuffer>(vertices, verticesCount, GL_STATIC_DRAW);
-    m_vertexArrayBuffer = std::make_unique<OpenglVertexArrayBuffer>();
+    this->m_vertexBuffer = std::make_unique<VertexBuffer>(vertices, verticesCount, GL_STATIC_DRAW);
+    m_vertexArrayBuffer = std::make_unique<VertexArrayBuffer>();
 
     // Bind buffers to the vertex array buffer
     m_vertexArrayBuffer->Bind();
@@ -16,14 +17,11 @@ OpenglMesh::OpenglMesh(const float vertices[], const unsigned int verticesCount)
     m_vertexBuffer->Unbind();
 }
 
-OpenglMesh::OpenglMesh(const float vertices[], const unsigned int verticesCount, const unsigned int indices[], const unsigned int indicesCount) : Renderer::Mesh(vertices, verticesCount, indices, indicesCount)
+Mesh::Mesh(const float vertices[], const unsigned int verticesCount, const unsigned int indices[], const unsigned int indicesCount)
 {
-
-    std::cout << "OpenglMesh::OpenglMesh: verticesCount = " << verticesCount << ", indicesCount = " << indicesCount << std::endl;
-
-    m_vertexBuffer = std::make_unique<OpenglVertexBuffer>(vertices, verticesCount, GL_STATIC_DRAW);
-    m_indexBuffer = std::make_unique<OpenglIndexBuffer>(indices, indicesCount, GL_STATIC_DRAW);
-    m_vertexArrayBuffer = std::make_unique<OpenglVertexArrayBuffer>();
+    m_vertexBuffer = std::make_unique<VertexBuffer>(vertices, verticesCount, GL_STATIC_DRAW);
+    m_indexBuffer = std::make_unique<IndexBuffer>(indices, indicesCount, GL_STATIC_DRAW);
+    m_vertexArrayBuffer = std::make_unique<VertexArrayBuffer>();
 
     // Bind buffers to the vertex array buffer
     m_vertexArrayBuffer->Bind();
@@ -34,14 +32,14 @@ OpenglMesh::OpenglMesh(const float vertices[], const unsigned int verticesCount,
     m_indexBuffer->Unbind();
 }
 
-OpenglMesh::~OpenglMesh()
+Mesh::~Mesh()
 {
     m_indexBuffer.reset();
     m_vertexBuffer.reset();
     m_vertexArrayBuffer.reset();
 }
 
-void OpenglMesh::SetVertexAttribute(const int location, const int size, const GLuint type, const size_t &stride, const void *const ptrAttribute)
+void Mesh::SetVertexAttribute(const int location, const int size, const GLuint type, const size_t &stride, const void *const ptrAttribute)
 {
     m_vertexArrayBuffer->Bind();
     m_vertexBuffer->Bind();
@@ -51,17 +49,17 @@ void OpenglMesh::SetVertexAttribute(const int location, const int size, const GL
     m_vertexBuffer->Unbind();
 }
 
-void OpenglMesh::MarkDynamic()
+void Mesh::MarkDynamic()
 {
     throw std::runtime_error(std::string(__func__) + " not implemented yet.");
 }
 
-void OpenglMesh::MarkStatic()
+void Mesh::MarkStatic()
 {
     throw std::runtime_error(std::string(__func__) + " not implemented yet.");
 }
 
-void OpenglMesh::Draw() const
+void Mesh::Draw() const
 {
     m_vertexArrayBuffer->Bind();
     if (m_indexBuffer != nullptr)

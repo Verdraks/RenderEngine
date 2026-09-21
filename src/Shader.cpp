@@ -1,13 +1,13 @@
-#include "OpenglShader.h"
+#include "Shader.h"
 #include <array>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <vector>
 
-using namespace Platform;
+using namespace Renderer;
 
-OpenglShader::OpenglShader(const char *vertexPath, const char *fragmentPath) : Shader(vertexPath, fragmentPath)
+Shader::Shader(const char *vertexPath, const char *fragmentPath)
 {
     std::ifstream vertexShaderFile;
     std::ifstream fragmentShaderFile;
@@ -49,22 +49,22 @@ OpenglShader::OpenglShader(const char *vertexPath, const char *fragmentPath) : S
     glDeleteShader(fragmentShader);
 }
 
-OpenglShader::~OpenglShader()
+Shader::~Shader()
 {
     glDeleteProgram(m_id);
 }
 
-void OpenglShader::Bind() const
+void Shader::Bind() const
 {
     glUseProgram(m_id);
 }
 
-void OpenglShader::Unbind() const
+void Shader::Unbind() const
 {
     glUseProgram(0);
 }
 
-void OpenglShader::CompileShader(unsigned int &shaderId, const char *shaderCode, const GLuint &shaderType) const
+void Shader::CompileShader(unsigned int &shaderId, const char *shaderCode, const GLuint &shaderType) const
 {
     shaderId = glCreateShader(shaderType);
     glShaderSource(shaderId, 1, &shaderCode, nullptr);
@@ -81,7 +81,7 @@ void OpenglShader::CompileShader(unsigned int &shaderId, const char *shaderCode,
     }
 }
 
-void OpenglShader::CompileShaderProgram(const std::vector<unsigned int> &shadersId)
+void Shader::CompileShaderProgram(const std::vector<unsigned int> &shadersId)
 {
     m_id = glCreateProgram();
 
@@ -104,7 +104,7 @@ void OpenglShader::CompileShaderProgram(const std::vector<unsigned int> &shaders
     }
 }
 
-void OpenglShader::SetBool(const std::string &name, const bool &value) const
+void Shader::SetBool(const std::string &name, const bool &value) const
 {
     if (int location; GetUniformLocation(name, location))
     {
@@ -112,7 +112,7 @@ void OpenglShader::SetBool(const std::string &name, const bool &value) const
     }
 }
 
-void OpenglShader::SetInt(const std::string &name, const int &value) const
+void Shader::SetInt(const std::string &name, const int &value) const
 {
     if (int location; GetUniformLocation(name, location))
     {
@@ -120,7 +120,7 @@ void OpenglShader::SetInt(const std::string &name, const int &value) const
     }
 }
 
-void OpenglShader::SetFloat(const std::string &name, const float &value) const
+void Shader::SetFloat(const std::string &name, const float &value) const
 {
     if (int location; GetUniformLocation(name, location))
     {
@@ -128,7 +128,7 @@ void OpenglShader::SetFloat(const std::string &name, const float &value) const
     }
 }
 
-void OpenglShader::SetVector(const std::string &name, const std::array<float, 3> &value) const
+void Shader::SetVector(const std::string &name, const std::array<float, 3> &value) const
 {
     if (int location; GetUniformLocation(name, location))
     {
@@ -136,7 +136,7 @@ void OpenglShader::SetVector(const std::string &name, const std::array<float, 3>
     }
 }
 
-void OpenglShader::SetMatrix(const std::string &name, const float *valuePtr) const
+void Shader::SetMatrix(const std::string &name, const float *valuePtr) const
 {
     if (int location; GetUniformLocation(name, location))
     {
@@ -144,7 +144,7 @@ void OpenglShader::SetMatrix(const std::string &name, const float *valuePtr) con
     }
 }
 
-bool OpenglShader::GetUniformLocation(const std::string &name, int &location) const
+bool Shader::GetUniformLocation(const std::string &name, int &location) const
 {
     location = glGetUniformLocation(m_id, name.c_str());
     if (location == -1)

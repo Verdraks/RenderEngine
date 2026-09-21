@@ -1,8 +1,10 @@
-#include "GlfwWindow.h"
+#include "Window.h"
 #include <iostream>
 #include <stdexcept>
 
-Platform::GlfwWindow::GlfwWindow(const Core::WindowProperties &properties, std::unique_ptr<Core::RendererContext> context) : Core::Window(properties, std::move(context))
+using namespace Core;
+
+Window::Window(const Core::WindowProperties &properties)
 {
 	if (!glfwInit())
 	{
@@ -18,7 +20,7 @@ Platform::GlfwWindow::GlfwWindow(const Core::WindowProperties &properties, std::
 
 	constexpr auto framebufferSizeCallback = [](GLFWwindow *window, int width, int height)
 	{
-		auto *self = static_cast<Platform::GlfwWindow *>(glfwGetWindowUserPointer(window));
+		Core::Window *self = static_cast<Core::Window *>(glfwGetWindowUserPointer(window));
 		self->m_onResize(width, height);
 	};
 
@@ -30,44 +32,31 @@ Platform::GlfwWindow::GlfwWindow(const Core::WindowProperties &properties, std::
 		throw std::runtime_error("Failed to create GLFW window");
 	}
 
-	if (m_context != nullptr)
-	{
-		m_context->Init(m_windowHandle);
-		m_onResize += std::bind(&Core::RendererContext::UpdateContext, m_context.get(), std::placeholders::_1, std::placeholders::_2);
-	}
-	else
-	{
-		std::cerr << "Renderer context is null" << std::endl;
-	}
+	m_context = std::make_unique<Renderer::WindowOpenglContext>();
+
+	m_context->Init(m_windowHandle);
+	m_onResize += std::bind(&Renderer::WindowOpenglContext::UpdateContext, m_context.get(), std::placeholders::_1, std::placeholders::_2);
 }
 
-Platform::GlfwWindow::~GlfwWindow()
+Window::~Window()
 {
-	if (m_context != nullptr)
-	{
-		m_context.release();
-	}
+	m_context.release();
 
-	if (m_windowHandle != nullptr)
-	{
-		glfwDestroyWindow(m_windowHandle);
-		m_windowHandle = nullptr;
-	}
+	glfwDestroyWindow(m_windowHandle);
+	m_windowHandle = nullptr;
+
 	glfwTerminate();
 }
 
-void Platform::GlfwWindow::Update() const
+void Window::Update()
 {
 	if (glfwGetKey(m_windowHandle, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
 		glfwSetWindowShouldClose(m_windowHandle, true);
 	}
 
-	if (m_context != nullptr)
-	{
-		m_context->SwapBuffers();
-		m_context->Clear();
-	}
+	m_context->SwapBuffers();
+	m_context->Clear();
 
 	glfwPollEvents();
 	m_onUpdate();

@@ -4,7 +4,7 @@
 
 namespace Renderer
 {
-    class Camera
+    class Camera final
     {
     public:
         Camera();

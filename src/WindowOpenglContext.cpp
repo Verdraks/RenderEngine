@@ -1,10 +1,12 @@
-#include "OpenglContext.h"
+#include "WindowOpenglContext.h"
 
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 #include <stdexcept>
 
-void Platform::OpenglContext::Init(void *nativeHandle)
+using namespace Renderer;
+
+void Renderer::WindowOpenglContext::Init(void *nativeHandle)
 {
 	m_windowHandle = static_cast<GLFWwindow *>(nativeHandle);
 	// TODO:Call window hint before creating the window, not after. Init should be called after the window is created, not before. Move the window hint calls to the context constructor.
@@ -20,28 +22,28 @@ void Platform::OpenglContext::Init(void *nativeHandle)
 	glEnable(GL_DEPTH_TEST);
 }
 
-Platform::OpenglContext::OpenglContext()
+Renderer::WindowOpenglContext::WindowOpenglContext()
 {
 }
 
-Platform::OpenglContext::~OpenglContext()
+Renderer::WindowOpenglContext::~WindowOpenglContext()
 {
 	glfwMakeContextCurrent(nullptr);
 	glfwSetFramebufferSizeCallback(m_windowHandle, nullptr);
 }
 
-void Platform::OpenglContext::UpdateContext(int width, int height)
+void Renderer::WindowOpenglContext::UpdateContext(int width, int height)
 {
 	glViewport(0, 0, width, height);
 }
 
-void Platform::OpenglContext::Clear()
+void Renderer::WindowOpenglContext::Clear()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0, 0, 0, 1);
 }
 
-void Platform::OpenglContext::SwapBuffers()
+void Renderer::WindowOpenglContext::SwapBuffers()
 {
 	glfwSwapBuffers(m_windowHandle);
 }

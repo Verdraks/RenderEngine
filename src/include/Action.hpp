@@ -9,7 +9,7 @@
 namespace Core
 {
     template <typename... Args>
-    class Action
+    class Action final
     {
         using CallbackType = std::function<void(Args...)>;
 

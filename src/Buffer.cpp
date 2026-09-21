@@ -1,12 +1,12 @@
-#include "OpenglBuffer.h"
+#include "Buffer.h"
 #include "glad/glad.h"
 
 #include <iostream>
 
-using namespace Platform;
+using namespace Renderer;
 
 #pragma region Vertex Buffer
-OpenglVertexBuffer::OpenglVertexBuffer(const float *data, unsigned int count, unsigned int usage) : Renderer::VertexBuffer(data, count, usage)
+VertexBuffer::VertexBuffer(const float *data, unsigned int count, unsigned int usage) : m_count(count)
 {
     glGenBuffers(1, &m_id);
     glBindBuffer(GL_ARRAY_BUFFER, m_id);
@@ -14,23 +14,23 @@ OpenglVertexBuffer::OpenglVertexBuffer(const float *data, unsigned int count, un
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-OpenglVertexBuffer::~OpenglVertexBuffer()
+VertexBuffer::~VertexBuffer()
 {
     glDeleteBuffers(1, &m_id);
 }
-void OpenglVertexBuffer::Bind()
+void VertexBuffer::Bind()
 {
     glBindBuffer(GL_ARRAY_BUFFER, m_id);
 }
 
-void OpenglVertexBuffer::Unbind()
+void VertexBuffer::Unbind()
 {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 #pragma endregion Vertex Buffer
 
 #pragma region Index Buffer
-OpenglIndexBuffer::OpenglIndexBuffer(const unsigned int *data, unsigned int count, unsigned int usage) : Renderer::IndexBuffer(data, count, usage)
+IndexBuffer::IndexBuffer(const unsigned int *data, unsigned int count, unsigned int usage) : m_count(count)
 {
     glGenBuffers(1, &m_id);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id);
@@ -38,35 +38,35 @@ OpenglIndexBuffer::OpenglIndexBuffer(const unsigned int *data, unsigned int coun
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-OpenglIndexBuffer::~OpenglIndexBuffer()
+IndexBuffer::~IndexBuffer()
 {
     glDeleteBuffers(1, &m_id);
 }
-void OpenglIndexBuffer::Bind()
+void IndexBuffer::Bind()
 {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id);
 }
-void OpenglIndexBuffer::Unbind()
+void IndexBuffer::Unbind()
 {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 #pragma endregion Index Buffer
 
 #pragma region Vertex Array Buffer
-OpenglVertexArrayBuffer::OpenglVertexArrayBuffer() : Renderer::VertexArrayBuffer()
+VertexArrayBuffer::VertexArrayBuffer()
 {
     glGenVertexArrays(1, &m_id);
 }
 
-OpenglVertexArrayBuffer::~OpenglVertexArrayBuffer()
+VertexArrayBuffer::~VertexArrayBuffer()
 {
     glDeleteVertexArrays(1, &m_id);
 }
-void OpenglVertexArrayBuffer::Bind()
+void VertexArrayBuffer::Bind()
 {
     glBindVertexArray(m_id);
 }
-void OpenglVertexArrayBuffer::Unbind()
+void VertexArrayBuffer::Unbind()
 {
     glBindVertexArray(0);
 }

@@ -2,14 +2,14 @@
 
 namespace Renderer
 {
-    class Texture
+    class Texture final
     {
     public:
-        Texture(const char *path) {}
-        virtual ~Texture() = default;
+        Texture(const char *path);
+        ~Texture();
 
-        virtual void Bind() = 0;
-        virtual void Unbind() = 0;
+        void Bind();
+        void Unbind();
 
     public:
         int GetWidth() const { return m_width; }
@@ -17,5 +17,7 @@ namespace Renderer
 
     protected:
         int m_width, m_height;
+        unsigned int m_id;
+        int m_nrChannels;
     };
 }
